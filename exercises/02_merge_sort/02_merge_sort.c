@@ -13,9 +13,43 @@ typedef struct {
 Student students[MAX_STUDENTS];
 Student temp[MAX_STUDENTS];
 
+void merge_sort_iteration(int left, int right) {
+    right++;
+    for(int width = 1; width < right - left; width <<= 1) {
+        for(int mid = left + width; mid < right; mid += 2 * width) {
+            int i = 0, j = mid, k = mid - width, bound = (mid + width < right) ? mid + width : right;
+            memcpy(temp, &students[k], width * sizeof(students[0]));
+            while(i < width && j < bound) {
+                if(temp[i].score > students[j].score) {
+                    students[k++] = temp[i++];
+                } else {
+                    students[k++] = students[j++];
+                }
+            }
+            memcpy(&students[k], &temp[i], (width - i) * sizeof(temp[0]));
+        }
+    }
+}
+
 void merge_sort(int left, int right) {
-    // TODO: 在这里添加你的代码
-    // I AM NOT DONE
+    // if(left >= right)
+    //     return;
+    // int mid = left + (right - left) / 2;
+    // merge_sort(left, mid);
+    // merge_sort(mid + 1, right);
+
+    // int temp_len = mid - left + 1;
+    // memcpy(temp, &students[left], temp_len * sizeof(students[left]));
+    // int i = 0, j = mid + 1, k = left;
+    // while(i < temp_len && j <= right) {
+    //     if(temp[i].score > students[j].score) {
+    //         students[k++] = temp[i++];
+    //     } else {
+    //         students[k++] = students[j++];
+    //     }
+    // }
+    // memcpy(&students[k], &temp[i], (temp_len - i) * sizeof(temp[i]));
+    merge_sort_iteration(left, right);
 }
 
 int main(void) {

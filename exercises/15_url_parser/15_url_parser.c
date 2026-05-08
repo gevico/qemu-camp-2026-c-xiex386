@@ -11,9 +11,31 @@
 
 int parse_url(const char* url) {
     int err = 0;
+    char *split, *kv_start, *tok;
 
-    // TODO: 在这里添加你的代码
-    // I AM NOT DONE
+    if(strncmp(url, "http://", 7) != 0 && strncmp(url, "https://", 8) != 0) {
+        err = 1;
+        goto exit;
+    }
+    
+    split = strchr(url, '?');
+    if(!split) {
+        goto exit;
+    }
+
+    split++;
+    kv_start = malloc((strlen(split) + 1) * split[0]);
+    strcpy(kv_start, split);
+    tok = strtok(kv_start, "&");
+    while(tok) {
+        split = strchr(tok, '=');
+        if(split) {
+            *(split++) = '\0';
+            printf("key = %s, value = %s\n", tok, split);
+        }
+        tok = strtok(NULL, "&");
+    }
+    free(kv_start);
 
 exit:
     return err;

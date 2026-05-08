@@ -39,9 +39,51 @@ void processFile(const char *filename) {
 
     printf("=== 处理数据来自: %s ===\n", filename);
 
+
     switch (choice) {
-        // TODO: 在这里添加你的代码
-        // I AM NOT DONE
+        case 1: {
+            int *array = malloc(n * sizeof(array[0]));
+            for(int i = 0; i < n; i++) {
+                fscanf(fin, "%d", &array[i]);
+            }
+            sort(array, n, sizeof(array[0]), compareInt);
+            for(int i = 0; i < n; i++) {
+                printf("%d ", array[i]);
+            }
+            free(array);
+            break;
+        }
+
+        case 2: {
+            float *array = malloc(n * sizeof(array[0]));
+            for(int i = 0; i < n; i++) {
+                fscanf(fin, "%f", &array[i]);
+            }
+            sort(array, n, sizeof(array[0]), compareFloat);
+            for(int i = 0; i < n; i++) {
+                printf("%f ", array[i]);
+            }
+            free(array);
+            break;
+        }
+
+        case 3: {
+            char **array = malloc(n * sizeof(array[0]));
+            for(int i = 0; i < n; i++) {
+                array[i] = malloc(101 * sizeof(array[i][0]));
+                fscanf(fin, "%100s", array[i]);
+            }
+            sort(array, n, sizeof(array[0]), compareString);
+            for(int i = 0; i < n; i++) {
+                printf("%s ", array[i]);
+                free(array[i]);
+            }
+            free(array);
+            break;
+        }
+
+        default:
+            break;
     }
 
     fclose(fin);

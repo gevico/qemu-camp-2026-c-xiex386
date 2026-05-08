@@ -58,8 +58,13 @@ int is_builtin_command(char **args) {
   if (args[0] == NULL)
     return 0;
 
-  // TODO: 在这里添加你的代码
-  // I AM NOT DONE
+  if (strcmp(args[0], "cd") == 0) {
+    execute_cd(args);
+    return 1;
+  } else if (strcmp(args[0], "exit") == 0) {
+    execute_exit();
+    return 1;
+  }
 
   return 0;
 }
@@ -77,8 +82,17 @@ int parse_input(char *input, char **args) {
   while (*buf != '\0' && i < MAX_ARGS - 1) {
       char c = *buf;
 
-        // TODO: 在这里添加你的代码
-        // I AM NOT DONE
+      if (c == '"') {
+        in_quotes = !in_quotes;
+      } else if (c == ' ' && !in_quotes) {
+        if(arg_buf_idx > 0) {
+          arg_buf[arg_buf_idx] = '\0';
+          args[i++] = strdup(arg_buf);
+          arg_buf_idx = 0;
+        }
+      } else if(arg_buf_idx < MAX_INPUT - 1) {
+        arg_buf[arg_buf_idx++] = c;
+      }
 
       buf++;
   }
@@ -91,6 +105,12 @@ int parse_input(char *input, char **args) {
 
   args[i] = NULL;  // exec-style NULL结尾
   return i;
+}
+
+void free_args(int argc, char **args) {
+  for(int i = 0; i < argc; i++) {
+    free(args[i]);
+  }
 }
 
 // ======================
@@ -124,6 +144,7 @@ int main(int argc, char *argv[]) {
 
       // 处理内置命令
       if (is_builtin_command(args)) {
+        free_args(argc_parsed, args);
         continue;
       }
 
@@ -154,6 +175,8 @@ int main(int argc, char *argv[]) {
       if (!found) {
         fprintf(stderr, "mybash: command not found: %s\n", cmd_name);
       }
+
+      free_args(argc_parsed, args);
     }
 
     fclose(file);
@@ -179,6 +202,7 @@ int main(int argc, char *argv[]) {
       }
 
       if (is_builtin_command(args)) {
+        free_args(argc, args);
         continue;
       }
 
@@ -203,6 +227,8 @@ int main(int argc, char *argv[]) {
       if (!found) {
         fprintf(stderr, "mybash: command not found: %s\n", cmd_name);
       }
+
+      free_args(argc, args);
     }
   }
 

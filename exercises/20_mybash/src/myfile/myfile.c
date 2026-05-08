@@ -38,8 +38,8 @@ int __cmd_myfile(const char* filename) {
     fflush(stdout);
     printf("filepath: %s\n", filepath);
 
-    // TODO: 在这里添加你的代码
-    // I AM NOT DONE
+    fd = open(filepath, O_RDONLY);
+    read(fd, &ehdr, sizeof(ehdr));
 
     print_elf_type(ehdr.e_type);
     close(fd);
